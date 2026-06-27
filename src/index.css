@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+@theme {
+  --color-apple-white: #FFFFFF;
+  --color-apple-gray: #F5F5F7;
+  --color-apple-dark: #1D1D1F;
+  --color-apple-blue: #8EC8FF;
+  --color-apple-accent: #0071E3;
+
+  --font-sans: 'DM Sans', sans-serif;
+
+  --spacing-120: 120px;
+  --spacing-180: 180px;
+  --spacing-40: 40px;
+  --spacing-80: 80px;
+
+  --radius-24: 24px;
+  --radius-32: 32px;
+
+  --letter-spacing-tight-heading: -0.02em;
+  --letter-spacing-tighter-heading: -0.03em;
+}
+
+/* Custom base styles matching Tailwind v4 configuration */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--color-apple-white);
+  color: var(--color-apple-dark);
+  font-family: var(--font-sans);
+}
+
+/* Apple glassmorphism background */
+.apple-glass {
+  backdrop-filter: saturate(180%) blur(20px);
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.apple-glass-dark {
+  backdrop-filter: saturate(180%) blur(20px);
+  background-color: rgba(29, 29, 31, 0.8);
+}
+
+/* Smooth scroll reveal */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-on-scroll.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Negative letter spacing for massive headers */
+
+/* Global Typography System */
+.text-h1 {
+  @apply text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-[-0.03em] leading-[1.1];
+}
+
+.text-h2 {
+  @apply text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-[-0.015em] leading-tight;
+}
+
+.text-h3 {
+  @apply text-xl md:text-2xl font-bold tracking-tight leading-snug;
+}
+
+.text-h4 {
+  @apply text-lg font-bold leading-normal;
+}
+
+.text-body {
+  @apply text-base md:text-lg font-light leading-relaxed;
+}
+
+.text-body-sm {
+  @apply text-sm md:text-base font-light leading-relaxed;
+}
+
+/* Premium Apple button click & hover micro-interactions */
+.btn-apple-primary {
+  @apply px-6 py-3.5 bg-apple-accent text-white rounded-full font-medium inline-block text-center text-sm transition-all duration-300;
+  box-shadow: 0 4px 12px 0 rgba(0, 113, 227, 0.12);
+}
+
+.btn-apple-primary:hover {
+  @apply scale-[1.01] bg-[#0077ED];
+  box-shadow: 0 6px 18px 0 rgba(0, 113, 227, 0.2);
+}
+
+.btn-apple-primary:active {
+  @apply scale-[0.98];
+}
+
+.btn-apple-secondary {
+  @apply px-6 py-3.5 bg-apple-gray text-apple-accent rounded-full font-medium inline-block text-center text-sm transition-all duration-300;
+}
+
+.btn-apple-secondary:hover {
+  @apply scale-[1.01] bg-[#E8E8ED] text-[#0077ED];
+}
+
+.btn-apple-secondary:active {
+  @apply scale-[0.98];
+}
+
+.btn-apple-dark {
+  @apply px-6 py-3.5 bg-apple-dark text-white rounded-full font-medium inline-block text-center text-sm transition-all duration-300;
+}
+
+.btn-apple-dark:hover {
+  @apply scale-[1.01] bg-black;
+}
+
+.btn-apple-dark:active {
+  @apply scale-[0.98];
+}
+

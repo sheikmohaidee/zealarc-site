@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /
+
+# Rewrite relative nested route asset requests to root assets
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^.*/assets/(.*)$ assets/$1 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
