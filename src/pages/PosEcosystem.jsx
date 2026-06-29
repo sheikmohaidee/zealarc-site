@@ -72,13 +72,10 @@ export default function PosEcosystem() {
             </div>
             <div className="lg:col-span-6">
               <FadeIn delay={200}>
-                <div className="p-2 bg-apple-gray rounded-32 border border-black/[0.04] shadow-sm overflow-hidden">
-                  <img 
-                    src="../assets/category management.jpeg" 
-                    alt="Hive Provisioning System" 
-                    className="rounded-[28px] w-full object-cover aspect-[4/3]"
-                  />
-                </div>
+                <DeviceVideo 
+                  videoSrc="/assets/videos/hive-app.mp4" 
+                  deviceType="Desktop"
+                />
               </FadeIn>
             </div>
           </div>
