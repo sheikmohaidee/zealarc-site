@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import FadeIn from '../components/FadeIn';
+import DeviceVideo from '../components/DeviceVideo';
 
 export default function Products() {
   useEffect(() => {
@@ -55,13 +56,11 @@ export default function Products() {
             <div className="lg:col-span-6 relative flex items-center justify-center min-h-[350px] sm:min-h-[400px]">
               <FadeIn delay={200} className="w-full relative">
                 {/* Nectar Tablet Mockup */}
-                <div className="w-[85%] mr-auto p-2.5 bg-black rounded-[32px] border-[6px] border-[#222] shadow-[0_20px_50px_rgba(0,0,0,0.15)] overflow-hidden">
-                  <img 
-                    src="./assets/nectar_checkout.jpg" 
-                    alt="Nectar POS Checkout" 
-                    className="rounded-[20px] w-full object-cover aspect-[16/10]"
-                  />
-                </div>
+                <DeviceVideo 
+                  videoSrc="/assets/videos/nectar-app.mp4" 
+                  deviceType="Tablet"
+                  className="w-[85%] mr-auto"
+                />
                 
                 {/* Queen Mobile Mockup Overlapping */}
                 <div className="absolute right-0 bottom-[-20px] w-[35%] max-w-[160px] p-2 bg-black rounded-[36px] border-[4px] border-[#222] shadow-[0_25px_60px_-10px_rgba(0,0,0,0.3)] overflow-hidden">

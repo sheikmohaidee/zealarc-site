@@ -9,6 +9,7 @@ import {
 import FadeIn from '../components/FadeIn';
 import ProductCard from '../components/ProductCard';
 import Accordion from '../components/Accordion';
+import DeviceVideo from '../components/DeviceVideo';
 
 function StatueOfLiberty() {
   return (
@@ -1296,13 +1297,10 @@ export default function Home() {
           
           <div className="md:col-span-6">
             <FadeIn delay={450}>
-              <div className="p-3 bg-black rounded-[36px] border-[8px] border-[#222] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] overflow-hidden group">
-                <img 
-                  src="./assets/nectar_checkout.jpg" 
-                  alt="Nectar POS Checkout screen" 
-                  className="rounded-[22px] w-full object-cover aspect-[16/10] group-hover:scale-[1.01] transition-transform duration-500 ease-out"
-                />
-              </div>
+              <DeviceVideo 
+                videoSrc="/assets/videos/nectar-app.mp4" 
+                deviceType="Tablet"
+              />
             </FadeIn>
           </div>
         </div>

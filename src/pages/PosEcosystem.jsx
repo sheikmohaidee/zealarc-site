@@ -107,13 +107,10 @@ export default function PosEcosystem() {
             </div>
             <div className="lg:col-span-6 lg:order-1">
               <FadeIn delay={200}>
-                <div className="p-3 bg-black rounded-[36px] border-[8px] border-[#222] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] overflow-hidden">
-                  <img 
-                    src="../assets/nectar_checkout.jpg" 
-                    alt="Nectar POS register" 
-                    className="rounded-[22px] w-full object-cover aspect-[16/10]"
-                  />
-                </div>
+                <DeviceVideo 
+                  videoSrc="/assets/videos/nectar-app.mp4" 
+                  deviceType="Tablet"
+                />
               </FadeIn>
             </div>
           </div>
