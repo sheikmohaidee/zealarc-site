@@ -153,19 +153,7 @@ export default function Contact() {
                 </div>
               </FadeIn>
 
-              {/* Office Information (Hours) */}
-              <FadeIn delay={400} className="flex gap-4 items-start border-t border-black/[0.05] pt-6 mt-2">
-                <div className="w-10 h-10 rounded-xl bg-apple-gray flex items-center justify-center text-apple-dark/60 shadow-sm flex-shrink-0">
-                  <span className="text-xs font-bold uppercase">hrs</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-apple-dark text-sm mb-1">Office Hours</h4>
-                  <p className="text-xs text-apple-dark/60 leading-relaxed">
-                    Monday — Saturday: 9:00 AM — 6:00 PM IST<br />
-                    (Support & Inquiries)
-                  </p>
-                </div>
-              </FadeIn>
+
 
               {/* Quick Contact Options */}
               <FadeIn delay={450} className="grid grid-cols-3 gap-3 pt-6 border-t border-black/[0.05]">
