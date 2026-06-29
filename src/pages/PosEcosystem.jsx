@@ -70,11 +70,11 @@ export default function PosEcosystem() {
                 </div>
               </FadeIn>
             </div>
-            <div className="lg:col-span-6">
+            <div className="lg:col-span-6 flex justify-center">
               <FadeIn delay={200}>
                 <DeviceVideo 
                   videoSrc="/assets/videos/hive-app.mp4" 
-                  deviceType="Desktop"
+                  deviceType="Phone"
                 />
               </FadeIn>
             </div>
