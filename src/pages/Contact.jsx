@@ -10,7 +10,8 @@ export default function Contact() {
     phone: '',
     company: '',
     subject: '',
-    message: ''
+    message: '',
+    b_url: ''
   });
   
   const location = useLocation();
@@ -76,7 +77,8 @@ export default function Contact() {
           phone: '',
           company: '',
           subject: '',
-          message: ''
+          message: '',
+          b_url: ''
         });
       } else {
         setStatus({
@@ -118,8 +120,8 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-apple-dark text-sm mb-1">Email</h4>
-                  <a href="mailto:hello@zealarc.com" className="text-xs text-apple-dark/60 hover:text-apple-accent transition-colors">
-                    hello@zealarc.com
+                  <a href="mailto:contact.zealarc@gmail.com" className="text-xs text-apple-dark/60 hover:text-apple-accent transition-colors font-medium">
+                    contact.zealarc@gmail.com
                   </a>
                 </div>
               </FadeIn>
@@ -131,8 +133,8 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-apple-dark text-sm mb-1">Phone</h4>
-                  <a href="tel:+18005550199" className="text-xs text-apple-dark/60 hover:text-apple-accent transition-colors">
-                    +1 (800) 555-0199
+                  <a href="tel:+917639325272" className="text-xs text-apple-dark/60 hover:text-apple-accent transition-colors font-medium">
+                    +91 76393 25272
                   </a>
                 </div>
               </FadeIn>
@@ -146,8 +148,7 @@ export default function Contact() {
                   <h4 className="font-semibold text-apple-dark text-sm mb-1">Address</h4>
                   <p className="text-xs text-apple-dark/60 leading-relaxed">
                     Zealarc Digital Solutions,<br />
-                    100 Plaza Suite 32B,<br />
-                    San Francisco, CA 94111
+                    Chennai, Tamil Nadu, India
                   </p>
                 </div>
               </FadeIn>
@@ -160,23 +161,23 @@ export default function Contact() {
                 <div>
                   <h4 className="font-semibold text-apple-dark text-sm mb-1">Office Hours</h4>
                   <p className="text-xs text-apple-dark/60 leading-relaxed">
-                    Monday — Friday: 9:00 AM — 6:00 PM EST<br />
-                    Saturday: 10:00 AM — 2:00 PM EST (Support only)
+                    Monday — Saturday: 9:00 AM — 6:00 PM IST<br />
+                    (Support & Inquiries)
                   </p>
                 </div>
               </FadeIn>
 
               {/* Quick Contact Options */}
               <FadeIn delay={450} className="grid grid-cols-3 gap-3 pt-6 border-t border-black/[0.05]">
-                <a href="https://wa.me/18005550199" target="_blank" rel="noopener noreferrer" className="p-3 bg-apple-gray hover:bg-[#E8E8ED] hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(0,0,0,0.01)] rounded-xl text-center flex flex-col items-center gap-1.5 transition-all duration-300">
+                <a href="https://wa.me/917639325272" target="_blank" rel="noopener noreferrer" className="p-3 bg-apple-gray hover:bg-[#E8E8ED] hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(0,0,0,0.01)] rounded-xl text-center flex flex-col items-center gap-1.5 transition-all duration-300">
                   <span className="text-[11px] font-bold text-apple-dark">WhatsApp</span>
                   <span className="text-[9px] text-apple-dark/50 leading-none">Instant chat</span>
                 </a>
-                <a href="tel:+18005550199" className="p-3 bg-apple-gray hover:bg-[#E8E8ED] hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(0,0,0,0.01)] rounded-xl text-center flex flex-col items-center gap-1.5 transition-all duration-300">
+                <a href="tel:+917639325272" className="p-3 bg-apple-gray hover:bg-[#E8E8ED] hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(0,0,0,0.01)] rounded-xl text-center flex flex-col items-center gap-1.5 transition-all duration-300">
                   <span className="text-[11px] font-bold text-apple-dark">Phone</span>
                   <span className="text-[9px] text-apple-dark/50 leading-none">Direct call</span>
                 </a>
-                <a href="mailto:hello@zealarc.com" className="p-3 bg-apple-gray hover:bg-[#E8E8ED] hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(0,0,0,0.01)] rounded-xl text-center flex flex-col items-center gap-1.5 transition-all duration-300">
+                <a href="mailto:contact.zealarc@gmail.com" className="p-3 bg-apple-gray hover:bg-[#E8E8ED] hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(0,0,0,0.01)] rounded-xl text-center flex flex-col items-center gap-1.5 transition-all duration-300">
                   <span className="text-[11px] font-bold text-apple-dark">Email</span>
                   <span className="text-[9px] text-apple-dark/50 leading-none">Inquiries</span>
                 </a>
@@ -266,6 +267,17 @@ export default function Contact() {
                   />
                 </div>
 
+                {/* Honeypot field for spam protection */}
+                <input 
+                  type="text" 
+                  name="b_url" 
+                  value={formData.b_url} 
+                  onChange={handleChange} 
+                  style={{ display: 'none' }} 
+                  tabIndex={-1} 
+                  autoComplete="off" 
+                />
+
                 {/* Message */}
                 <div className="flex flex-col gap-2">
                   <label htmlFor="message" className="text-xs font-bold text-apple-dark/60 uppercase tracking-wider">Message *</label>
@@ -291,6 +303,10 @@ export default function Contact() {
                   <Send size={16} />
                 </button>
 
+                <p className="text-[11px] text-apple-dark/40 text-center -mt-2">
+                  We'll get back to you within one business day.
+                </p>
+
                 {/* Status Messages */}
                 {status.success === true && (
                   <div className="p-4 bg-green-50 text-green-800 rounded-xl flex gap-3 text-xs items-center border border-green-200">
@@ -308,6 +324,26 @@ export default function Contact() {
               </form>
             </FadeIn>
           </div>
+        </div>
+      </section>
+
+      {/* Google Maps Section */}
+      <section className="py-8 bg-white border-t border-black/[0.04]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <FadeIn>
+            <div className="w-full h-[450px] rounded-32 overflow-hidden border border-black/[0.06] shadow-sm">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248756.11675408363!2d80.15643028682855!3d13.047525316316104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5265ea4f7d3361%3A0x82e4b03f7e1f01!2sChennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1719600000000!5m2!1sen!2sin"
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Zealarc Office Location"
+              ></iframe>
+            </div>
+          </FadeIn>
         </div>
       </section>
 
