@@ -106,7 +106,7 @@ export default function Contact() {
         setStatus({
           submitting: false,
           success: false,
-          message: result.message || 'Unable to send your message.'
+          message: 'Unable to send your message. Please try again later.'
         });
       }
     } catch (err) {
@@ -129,7 +129,7 @@ export default function Contact() {
         setStatus({
           submitting: false,
           success: false,
-          message: 'Unable to send your message.'
+          message: 'Unable to send your message. Please try again later.'
         });
       }
     }
