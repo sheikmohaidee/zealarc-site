@@ -28,6 +28,12 @@ export default function Contact() {
     }
   }, [location]);
 
+  const [status, setStatus] = useState({
+    submitting: false,
+    success: null,
+    message: ''
+  });
+
   useEffect(() => {
     if (status.success === true) {
       const timer = setTimeout(() => {
@@ -36,12 +42,6 @@ export default function Contact() {
       return () => clearTimeout(timer);
     }
   }, [status.success]);
-  
-  const [status, setStatus] = useState({
-    submitting: false,
-    success: null,
-    message: ''
-  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
