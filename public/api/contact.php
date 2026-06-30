@@ -129,16 +129,23 @@ $emailBody = "
 </html>
 ";
 
+// Dynamically determine the From domain to prevent Hostinger domain-mismatch blocking
+$serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'zealarc.com';
+if (substr($serverName, 0, 4) === 'www.') {
+    $serverName = substr($serverName, 4);
+}
+$fromEmail = 'noreply@' . $serverName;
+
 // Headers
 $headers = [];
 $headers[] = 'MIME-Version: 1.0';
 $headers[] = 'Content-type: text/html; charset=utf-8';
-$headers[] = 'From: Zealarc Web Form <noreply@zealarc.com>';
+$headers[] = 'From: Zealarc Web Form <' . $fromEmail . '>';
 $headers[] = 'Reply-To: ' . $name . ' <' . $email . '>';
 $headers[] = 'X-Mailer: PHP/' . phpversion();
 
-// Send Email
-$mailSuccess = mail($to, $emailSubject, $emailBody, implode("\r\n", $headers));
+// Send Email (suppress warnings so we can capture the error object cleanly)
+$mailSuccess = @mail($to, $emailSubject, $emailBody, implode("\r\n", $headers));
 
 // Optional Database Logging
 $dbSaved = false;
@@ -177,8 +184,21 @@ if ($mailSuccess) {
     ]);
 } else {
     http_response_code(500);
+    $errorMessage = 'Unable to send your message.';
+    
+    // Retrieve the PHP mail error if DEV_MODE is enabled
+    @include_once __DIR__ . '/config.php';
+    if (defined('DEV_MODE') && DEV_MODE) {
+        $lastError = error_get_last();
+        if ($lastError) {
+            $errorMessage .= ' (PHP Error: ' . $lastError['message'] . ')';
+        } else {
+            $errorMessage .= ' (Check if your hosting mail server is enabled/configured)';
+        }
+    }
+    
     echo json_encode([
         'success' => false,
-        'message' => 'Failed to send your message. Please try again later or contact us directly at contact.zealarc@gmail.com.'
+        'message' => $errorMessage
     ]);
 }
