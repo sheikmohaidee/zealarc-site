@@ -73,9 +73,7 @@ export default function Contact() {
     setStatus({ submitting: true, success: null, message: '' });
 
     try {
-      // Use configured VITE_API_URL or fallback to relative domain paths
-      const baseApiUrl = import.meta.env.VITE_API_URL || './api';
-      const endpoint = `${baseApiUrl}/contact.php`.replace(/([^:]\/)\/+/g, "$1"); // prevent duplicate slash issues
+      const endpoint = '/api/contact.php';
 
       const response = await fetch(endpoint, {
         method: 'POST',
