@@ -28,11 +28,11 @@ define('DB_USER', getenv('DB_USER') ?: 'root');
 define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
 
 // Hostinger SMTP Configuration
-define('SMTP_USER', getenv('SMTP_USER') ?: 'your-email@domain.com');
-define('SMTP_PASS', getenv('SMTP_PASS') ?: 'your-email-password');
+define('SMTP_USER', getenv('SMTP_USER') ?: 'contact@zealarc.com');
+define('SMTP_PASS', getenv('SMTP_PASS') ?: 'xoxwup-cebvyj-9mIhke');
 
 // Set to false in production to disable detailed error messages
-define('DEV_MODE', getenv('DEV_MODE') !== false ? filter_var(getenv('DEV_MODE'), FILTER_VALIDATE_BOOLEAN) : true);
+define('DEV_MODE', getenv('DEV_MODE') !== false ? filter_var(getenv('DEV_MODE'), FILTER_VALIDATE_BOOLEAN) : false);
 
 if (DEV_MODE) {
     ini_set('display_errors', 1);
@@ -42,3 +42,4 @@ if (DEV_MODE) {
     ini_set('display_errors', 0);
     error_reporting(0);
 }
+?>
