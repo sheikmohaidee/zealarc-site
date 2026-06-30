@@ -69,13 +69,13 @@ try {
     $mail->isSMTP();
     $mail->Host       = 'smtp.hostinger.com';
     $mail->SMTPAuth   = true;
-    $mail->Username   = defined('SMTP_USER') ? SMTP_USER : '';
+    $mail->Username   = defined('SMTP_USER') ? SMTP_USER : 'contact@zealarc.com';
     $mail->Password   = defined('SMTP_PASS') ? SMTP_PASS : '';
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // SSL
     $mail->Port       = 465;
 
     // Recipients
-    $mail->setFrom(defined('SMTP_USER') ? SMTP_USER : 'noreply@zealarc.com', 'Zealarc Web Form');
+    $mail->setFrom(defined('SMTP_USER') ? SMTP_USER : 'contact@zealarc.com', 'Zealarc Web Form');
     $mail->addAddress('contact.zealarc@gmail.com');
     $mail->addReplyTo($email, $name);
 
@@ -99,15 +99,10 @@ try {
     echo json_encode(['success' => true]);
 } catch (Exception $e) {
     http_response_code(500);
-    if (defined('DEV_MODE') && DEV_MODE) {
-        echo json_encode([
-            'success' => false,
-            'error' => $mail->ErrorInfo ?: $e->getMessage()
-        ]);
-    } else {
-        echo json_encode([
-            'success' => false,
-            'error' => 'Unable to send your message. Please try again later.'
-        ]);
-    }
+    echo json_encode([
+        "success" => false,
+        "error" => $mail->ErrorInfo,
+        "exception" => $e->getMessage()
+    ]);
+    exit;
 }

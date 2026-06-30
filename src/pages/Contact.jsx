@@ -103,10 +103,11 @@ export default function Contact() {
           b_url: ''
         });
       } else {
+        const errMsg = result.error ? `${result.error}${result.exception ? ' | ' + result.exception : ''}` : 'Unable to send your message. Please try again later.';
         setStatus({
           submitting: false,
           success: false,
-          message: result.error || 'Unable to send your message. Please try again later.'
+          message: errMsg
         });
       }
     } catch (err) {
