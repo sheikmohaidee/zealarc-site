@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['success' => false]);
+    echo json_encode(['success' => false, 'error' => 'Method not allowed.']);
     exit;
 }
 
@@ -42,7 +42,7 @@ $message = isset($input['message']) ? strip_tags(trim($input['message'])) : '';
 // Validation
 if (empty($name) || empty($email) || empty($message) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     http_response_code(400);
-    echo json_encode(['success' => false]);
+    echo json_encode(['success' => false, 'error' => 'Invalid input or missing required fields.']);
     exit;
 }
 
@@ -52,122 +52,62 @@ $email = str_replace(array("\r", "\n"), '', $email);
 $company = str_replace(array("\r", "\n"), '', $company);
 $phone = str_replace(array("\r", "\n"), '', $phone);
 
-// Prepare Email
-$to = 'contact.zealarc@gmail.com';
-$emailSubject = !empty($subject) ? "Zealarc Contact: " . $subject : "New Zealarc Inquiry from " . $name;
-
-// Format plain text email body
-$emailBody = "New Contact Form Submission\n\n";
-$emailBody .= "Name:\n" . $name . "\n\n";
-$emailBody .= "Email:\n" . $email . "\n\n";
-$emailBody .= "Phone:\n" . ($phone ? $phone : 'N/A') . "\n\n";
-$emailBody .= "Company:\n" . ($company ? $company : 'N/A') . "\n\n";
-$emailBody .= "Subject:\n" . ($subject ? $subject : 'N/A') . "\n\n";
-$emailBody .= "Message:\n" . $message . "\n";
-
 // Include configuration
 @include_once __DIR__ . '/config.php';
 
-// Helper function to send email via SMTP (Zero-Dependency)
-function sendMailSMTP($to, $subject, $body, $replyToEmail) {
-    if (!defined('SMTP_USER') || !defined('SMTP_PASS') || empty(SMTP_USER) || empty(SMTP_PASS) || SMTP_USER === 'your-email@domain.com') {
-        return false; // SMTP not configured
-    }
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-    $host = 'ssl://smtp.hostinger.com';
-    $port = 465;
-    $username = SMTP_USER;
-    $password = SMTP_PASS;
+require_once __DIR__ . '/PHPMailer/src/Exception.php';
+require_once __DIR__ . '/PHPMailer/src/PHPMailer.php';
+require_once __DIR__ . '/PHPMailer/src/SMTP.php';
 
-    $socket = @fsockopen($host, $port, $errno, $errstr, 8);
-    if (!$socket) {
-        return false;
-    }
+$mail = new PHPMailer(true);
 
-    $getResponse = function($socket) {
-        $response = "";
-        while (substr($response, 3, 1) != ' ') {
-            if (!($line = fgets($socket, 512))) {
-                return false;
-            }
-            $response .= $line;
-        }
-        return $response;
-    };
+try {
+    // Server settings
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.hostinger.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = defined('SMTP_USER') ? SMTP_USER : '';
+    $mail->Password   = defined('SMTP_PASS') ? SMTP_PASS : '';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // SSL
+    $mail->Port       = 465;
 
-    $getResponse($socket); // Read greeting
+    // Recipients
+    $mail->setFrom(defined('SMTP_USER') ? SMTP_USER : 'noreply@zealarc.com', 'Zealarc Web Form');
+    $mail->addAddress('contact.zealarc@gmail.com');
+    $mail->addReplyTo($email, $name);
 
-    fwrite($socket, "EHLO " . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost') . "\r\n");
-    $getResponse($socket);
+    // Content
+    $mail->isHTML(false); // Plain text
+    $mail->Subject = 'New Website Enquiry - Zealarc';
+    
+    // Format plain text email body
+    $emailBody = "New Website Enquiry - Zealarc\n\n";
+    $emailBody .= "Name:\n" . $name . "\n\n";
+    $emailBody .= "Email:\n" . $email . "\n\n";
+    $emailBody .= "Phone:\n" . ($phone ? $phone : 'N/A') . "\n\n";
+    $emailBody .= "Company:\n" . ($company ? $company : 'N/A') . "\n\n";
+    $emailBody .= "Subject:\n" . ($subject ? $subject : 'N/A') . "\n\n";
+    $emailBody .= "Message:\n" . $message . "\n\n";
+    $emailBody .= "Date & Time:\n" . date('Y-m-d H:i:s') . ' UTC';
 
-    fwrite($socket, "AUTH LOGIN\r\n");
-    $getResponse($socket);
+    $mail->Body = $emailBody;
 
-    fwrite($socket, base64_encode($username) . "\r\n");
-    $getResponse($socket);
-
-    fwrite($socket, base64_encode($password) . "\r\n");
-    $authRes = $getResponse($socket);
-    if (strpos($authRes, '235') === false) {
-        fclose($socket);
-        return false;
-    }
-
-    fwrite($socket, "MAIL FROM: <" . $username . ">\r\n");
-    $getResponse($socket);
-
-    fwrite($socket, "RCPT TO: <" . $to . ">\r\n");
-    $getResponse($socket);
-
-    fwrite($socket, "DATA\r\n");
-    $getResponse($socket);
-
-    $headers = array(
-        'MIME-Version: 1.0',
-        'Content-Type: text/plain; charset=utf-8',
-        'Subject: =?UTF-8?B?' . base64_encode($subject) . '?=',
-        'To: ' . $to,
-        'From: Zealarc Web Form <' . $username . '>',
-        'Reply-To: ' . $replyToEmail,
-        'Date: ' . date('r'),
-        'X-Mailer: PHP/' . phpversion()
-    );
-
-    $data = implode("\r\n", $headers) . "\r\n\r\n" . $body . "\r\n.\r\n";
-    fwrite($socket, $data);
-    $dataRes = $getResponse($socket);
-
-    fwrite($socket, "QUIT\r\n");
-    fclose($socket);
-
-    return strpos($dataRes, '250') !== false;
-}
-
-// 1. First attempt sending via SMTP if credentials are set
-$mailSuccess = sendMailSMTP($to, $emailSubject, $emailBody, $email);
-
-// 2. If SMTP is not configured or fails, fallback to PHP mail()
-if (!$mailSuccess) {
-    $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'zealarc.com';
-    if (substr($serverName, 0, 4) === 'www.') {
-        $serverName = substr($serverName, 4);
-    }
-    $fromEmail = 'noreply@' . $serverName;
-
-    $headers = array(
-        'From: ' . $fromEmail,
-        'Reply-To: ' . $email,
-        'X-Mailer: PHP/' . phpversion(),
-        'Content-Type: text/plain; charset=utf-8'
-    );
-
-    $mailSuccess = @mail($to, $emailSubject, $emailBody, implode("\n", $headers), "-f" . $fromEmail);
-}
-
-if ($mailSuccess) {
-    http_response_code(200);
+    $mail->send();
     echo json_encode(['success' => true]);
-} else {
+} catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(['success' => false]);
+    if (defined('DEV_MODE') && DEV_MODE) {
+        echo json_encode([
+            'success' => false,
+            'error' => $mail->ErrorInfo ?: $e->getMessage()
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Unable to send your message. Please try again later.'
+        ]);
+    }
 }
