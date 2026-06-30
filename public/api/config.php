@@ -21,12 +21,6 @@ if (file_exists(__DIR__ . '/.env')) {
     }
 }
 
-// Database Configuration
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_NAME', getenv('DB_NAME') ?: 'zealarc_db');
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
-
 // Hostinger SMTP Configuration
 define('SMTP_USER', getenv('SMTP_USER') ?: 'contact@zealarc.com');
 define('SMTP_PASS', getenv('SMTP_PASS') ?: 'xoxwup-cebvyj-9mIhke');

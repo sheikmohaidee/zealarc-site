@@ -164,31 +164,6 @@ if (!$mailSuccess) {
     $mailSuccess = @mail($to, $emailSubject, $emailBody, implode("\n", $headers), "-f" . $fromEmail);
 }
 
-// 3. Optional Database Logging (if database constants are defined in config.php and connection succeeds)
-if (defined('DB_HOST') && defined('DB_NAME') && defined('DB_USER') && defined('DB_PASS') && !empty(DB_NAME)) {
-    try {
-        $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
-        $db = new PDO($dsn, DB_USER, DB_PASS, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_TIMEOUT => 3 // short timeout
-        ]);
-        
-        $sql = "INSERT INTO contact_submissions (name, email, phone, company, subject, message, created_at) 
-                VALUES (:name, :email, :phone, :company, :subject, :message, NOW())";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([
-            ':name' => $name,
-            ':email' => $email,
-            ':phone' => $phone,
-            ':company' => $company,
-            ':subject' => $subject,
-            ':message' => $message
-        ]);
-    } catch (\Exception $e) {
-        // Database failed, but we do not block the response since email delivery is the primary method.
-    }
-}
-
 if ($mailSuccess) {
     http_response_code(200);
     echo json_encode(['success' => true]);
