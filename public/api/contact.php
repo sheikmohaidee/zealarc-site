@@ -75,23 +75,24 @@ try {
     $mail->Port       = 465;
 
     // Recipients
-    $mail->setFrom(defined('SMTP_USER') ? SMTP_USER : 'contact@zealarc.com', 'Zealarc Web Form');
-    $mail->addAddress('contact.zealarc@gmail.com');
+    $senderEmail = defined('SMTP_USER') ? SMTP_USER : 'contact@zealarc.com';
+    $mail->setFrom($senderEmail, 'Zealarc Website');
+    $mail->addAddress('contact@zealarc.com');
     $mail->addReplyTo($email, $name);
 
     // Content
     $mail->isHTML(false); // Plain text
     $mail->Subject = 'New Website Enquiry - Zealarc';
     
-    // Format plain text email body
-    $emailBody = "New Website Enquiry - Zealarc\n\n";
+    // Format plain text email body exactly as requested
+    $emailBody = "New Contact Form Submission\n\n";
     $emailBody .= "Name:\n" . $name . "\n\n";
     $emailBody .= "Email:\n" . $email . "\n\n";
     $emailBody .= "Phone:\n" . ($phone ? $phone : 'N/A') . "\n\n";
     $emailBody .= "Company:\n" . ($company ? $company : 'N/A') . "\n\n";
     $emailBody .= "Subject:\n" . ($subject ? $subject : 'N/A') . "\n\n";
     $emailBody .= "Message:\n" . $message . "\n\n";
-    $emailBody .= "Date & Time:\n" . date('Y-m-d H:i:s') . ' UTC';
+    $emailBody .= "Submitted On:\n" . date('Y-m-d H:i:s') . ' UTC';
 
     $mail->Body = $emailBody;
 

@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 @include_once __DIR__ . '/config.php';
 
-$to = 'contact.zealarc@gmail.com';
+$to = 'contact@zealarc.com';
 $subject = 'Zealarc Mail Diagnostic';
 $message = "This is a diagnostic email from your Hostinger server.\n\nSent: " . date('Y-m-d H:i:s') . " UTC";
 
