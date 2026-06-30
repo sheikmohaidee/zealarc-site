@@ -73,7 +73,7 @@ if (substr($serverName, 0, 4) === 'www.') {
 }
 $fromEmail = 'noreply@' . $serverName;
 
-// Headers
+// Headers separated by \n (standard for Linux/Unix mail servers to prevent doubled CR/LF issues)
 $headers = array(
     'From: ' . $fromEmail,
     'Reply-To: ' . $email,
@@ -81,8 +81,8 @@ $headers = array(
     'Content-Type: text/plain; charset=utf-8'
 );
 
-// Send Email
-$mailSuccess = @mail($to, $emailSubject, $emailBody, implode("\r\n", $headers));
+// Send Email using the fifth parameter -f to set the envelope sender (required by Hostinger to authorize the send)
+$mailSuccess = @mail($to, $emailSubject, $emailBody, implode("\n", $headers), "-f" . $fromEmail);
 
 if ($mailSuccess) {
     http_response_code(200);
