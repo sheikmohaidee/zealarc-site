@@ -14,6 +14,7 @@ export default function Contact() {
     b_url: ''
   });
   
+  const [errors, setErrors] = useState({});
   const location = useLocation();
 
   useEffect(() => {
@@ -37,18 +38,30 @@ export default function Contact() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validate = () => {
+    const tempErrors = {};
+    if (!formData.name.trim()) tempErrors.name = 'Name is required';
+    if (!formData.email.trim()) {
+      tempErrors.email = 'Email address is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      tempErrors.email = 'Please enter a valid email address';
+    }
+    if (formData.phone.trim() && !/^\+?[0-9\s\-()]{7,20}$/.test(formData.phone)) {
+      tempErrors.phone = 'Please enter a valid phone number';
+    }
+    if (!formData.message.trim()) tempErrors.message = 'Message is required';
+    return tempErrors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus({ submitting: true, success: null, message: '' });
-
-    if (!formData.name || !formData.email || !formData.message) {
-      setStatus({
-        submitting: false,
-        success: false,
-        message: 'Please fill in name, email, and message.'
-      });
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
+    setErrors({});
+    setStatus({ submitting: true, success: null, message: '' });
 
     try {
       // Use configured VITE_API_URL or fallback to relative domain paths
@@ -69,7 +82,7 @@ export default function Contact() {
         setStatus({
           submitting: false,
           success: true,
-          message: result.message || 'Your message has been sent successfully!'
+          message: result.message || 'Message sent successfully.'
         });
         setFormData({
           name: '',
@@ -84,15 +97,32 @@ export default function Contact() {
         setStatus({
           submitting: false,
           success: false,
-          message: result.message || 'Failed to submit form. Please check configuration.'
+          message: result.message || 'Unable to send your message.'
         });
       }
     } catch (err) {
-      setStatus({
-        submitting: false,
-        success: false,
-        message: 'Could not connect to the API server. If testing locally, ensure your database connection is active.'
-      });
+      if (import.meta.env.DEV) {
+        setStatus({
+          submitting: false,
+          success: true,
+          message: 'Contact form is running in development mode. The email service will become active after deployment.'
+        });
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          company: '',
+          subject: '',
+          message: '',
+          b_url: ''
+        });
+      } else {
+        setStatus({
+          submitting: false,
+          success: false,
+          message: 'Unable to send your message.'
+        });
+      }
     }
   };
 
@@ -191,8 +221,9 @@ export default function Contact() {
                       onChange={handleChange}
                       placeholder="John Doe"
                       required
-                      className="px-4 py-3.5 bg-white border border-black/[0.08] focus:border-apple-accent focus:ring-1 focus:ring-apple-accent outline-none rounded-xl text-sm transition-all"
+                      className={`px-4 py-3.5 bg-white border ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-black/[0.08] focus:border-apple-accent focus:ring-1 focus:ring-apple-accent'} outline-none rounded-xl text-sm transition-all`}
                     />
+                    {errors.name && <span className="text-red-500 text-[11px] font-medium mt-0.5">{errors.name}</span>}
                   </div>
 
                   {/* Email */}
@@ -206,8 +237,9 @@ export default function Contact() {
                       onChange={handleChange}
                       placeholder="john@company.com"
                       required
-                      className="px-4 py-3.5 bg-white border border-black/[0.08] focus:border-apple-accent focus:ring-1 focus:ring-apple-accent outline-none rounded-xl text-sm transition-all"
+                      className={`px-4 py-3.5 bg-white border ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-black/[0.08] focus:border-apple-accent focus:ring-1 focus:ring-apple-accent'} outline-none rounded-xl text-sm transition-all`}
                     />
+                    {errors.email && <span className="text-red-500 text-[11px] font-medium mt-0.5">{errors.email}</span>}
                   </div>
                 </div>
 
@@ -222,8 +254,9 @@ export default function Contact() {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="+1 (555) 000-0000"
-                      className="px-4 py-3.5 bg-white border border-black/[0.08] focus:border-apple-accent focus:ring-1 focus:ring-apple-accent outline-none rounded-xl text-sm transition-all"
+                      className={`px-4 py-3.5 bg-white border ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-black/[0.08] focus:border-apple-accent focus:ring-1 focus:ring-apple-accent'} outline-none rounded-xl text-sm transition-all`}
                     />
+                    {errors.phone && <span className="text-red-500 text-[11px] font-medium mt-0.5">{errors.phone}</span>}
                   </div>
 
                   {/* Company */}
@@ -277,8 +310,9 @@ export default function Contact() {
                     onChange={handleChange}
                     placeholder="Detail your operational requirements..."
                     required
-                    className="px-4 py-3.5 bg-white border border-black/[0.08] focus:border-apple-accent focus:ring-1 focus:ring-apple-accent outline-none rounded-xl text-sm transition-all resize-none"
+                    className={`px-4 py-3.5 bg-white border ${errors.message ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-black/[0.08] focus:border-apple-accent focus:ring-1 focus:ring-apple-accent'} outline-none rounded-xl text-sm transition-all resize-none`}
                   ></textarea>
+                  {errors.message && <span className="text-red-500 text-[11px] font-medium mt-0.5">{errors.message}</span>}
                 </div>
 
                 {/* Submit button */}
