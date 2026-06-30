@@ -27,6 +27,15 @@ export default function Contact() {
       }));
     }
   }, [location]);
+
+  useEffect(() => {
+    if (status.success === true) {
+      const timer = setTimeout(() => {
+        setStatus(prev => ({ ...prev, success: null }));
+      }, 8000); // Auto-hide after 8 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [status.success]);
   
   const [status, setStatus] = useState({
     submitting: false,
@@ -203,10 +212,35 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Right Column: Contact form */}
-          <div className="lg:col-span-7 bg-apple-gray rounded-32 p-10 border border-black/[0.01] hover:border-black/[0.03] hover:shadow-[0_15px_30px_rgba(0,0,0,0.01)] transition-all duration-350 ease-out">
-            <FadeIn delay={200}>
-              <h2 className="text-2xl font-bold text-apple-dark tracking-tight mb-8">Send a Message</h2>
+          {/* Right Column: Contact form / Success Message */}
+          <div className="lg:col-span-7">
+            {status.success === true ? (
+              <FadeIn>
+                <div className="bg-white rounded-32 p-10 md:p-12 border border-black/[0.04] shadow-[0_20px_50px_rgba(0,0,0,0.05)] text-center flex flex-col items-center justify-center min-h-[530px]">
+                  <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center text-green-500 mb-6 shadow-sm border border-green-100">
+                    <CheckCircle2 size={32} />
+                  </div>
+                  <h2 className="text-3xl font-extrabold text-apple-dark mb-4">Thank You!</h2>
+                  <p className="text-sm text-apple-dark/60 leading-relaxed max-w-md mb-8">
+                    We've received your message successfully. Thank you for contacting Zealarc. Our team will review your enquiry and get back to you within one business day.
+                  </p>
+                  <div className="flex gap-4">
+                    <Link to="/" className="px-5 py-2.5 bg-apple-accent text-white hover:bg-[#0077ED] rounded-full text-xs font-medium transition-all active:scale-95 shadow-sm">
+                      Back to Home
+                    </Link>
+                    <button 
+                      onClick={() => setStatus(prev => ({ ...prev, success: null }))}
+                      className="px-5 py-2.5 border border-black/10 hover:bg-apple-gray text-apple-dark rounded-full text-xs font-medium transition-all active:scale-95"
+                    >
+                      Send Another Message
+                    </button>
+                  </div>
+                </div>
+              </FadeIn>
+            ) : (
+              <div className="bg-apple-gray rounded-32 p-10 border border-black/[0.01] hover:border-black/[0.03] hover:shadow-[0_15px_30px_rgba(0,0,0,0.01)] transition-all duration-350 ease-out">
+                <FadeIn delay={200}>
+                  <h2 className="text-2xl font-bold text-apple-dark tracking-tight mb-8">Send a Message</h2>
               
               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                 <div className="grid sm:grid-cols-2 gap-6">
@@ -330,13 +364,6 @@ export default function Contact() {
                 </p>
 
                 {/* Status Messages */}
-                {status.success === true && (
-                  <div className="p-4 bg-green-50 text-green-800 rounded-xl flex gap-3 text-xs items-center border border-green-200">
-                    <CheckCircle2 size={16} className="text-green-600 flex-shrink-0" />
-                    <span>{status.message}</span>
-                  </div>
-                )}
-
                 {status.success === false && (
                   <div className="p-4 bg-red-50 text-red-800 rounded-xl flex gap-3 text-xs items-center border border-red-200">
                     <AlertCircle size={16} className="text-red-600 flex-shrink-0" />
@@ -346,6 +373,8 @@ export default function Contact() {
               </form>
             </FadeIn>
           </div>
+        )}
+      </div>
         </div>
       </section>
 
